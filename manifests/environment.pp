@@ -21,4 +21,13 @@ class perlbrew::environment {
       group   => perlbrew,
       require => [ Group["perlbrew"], User["perlbrew"] ],
   }
+
+  exec {
+    "perlbrew_init":
+      command => "sh -c 'umask 022; /usr/bin/env PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} init'",
+      creates => "${perlbrew::params::perlbrew_root}/perls",
+      user    => "perlbrew",
+      group   => "perlbrew",
+      require => [ Group["perlbrew"], User["perlbrew"] ],
+  }
 }
