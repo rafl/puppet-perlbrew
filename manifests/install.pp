@@ -5,7 +5,7 @@ class perlbrew::install {
   }
 
   file {
-    "/usr/local/bin/perlbrew":
+    $perlbrew::params::perlbrew_bin:
       owner   => root,
       group   => root,
       mode    => 0755,
