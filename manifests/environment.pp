@@ -8,13 +8,13 @@ class perlbrew::environment {
   user {
     "perlbrew":
       ensure   => present,
-      home     => "/usr/local/perls",
+      home     => $perlbrew::params::perlbrew_root,
       uid      => 300,
       gid      => "perlbrew",
   }
 
   file {
-    "/usr/local/perls":
+    $perlbrew::params::perlbrew_root:
       ensure  => directory,
       mode    => 0755,
       owner   => perlbrew,
