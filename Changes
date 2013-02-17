@@ -1,5 +1,9 @@
 Version history for puppet-module-perlbrew
 
-2013-02-16
+0.1  2013-02-17
+  - Included LICENSE
+  - Improved documentation
+
+-    2013-02-16
   - Added basic rspec infrastructure (rhaen)
   - Added travis-ci integration (rhaen)
