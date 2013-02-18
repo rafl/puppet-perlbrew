@@ -1,3 +1,16 @@
+# Class: perlbrew
+#
+#   This class will install a Perl interpreter using perlbrew and will install
+#   Perl modules using cpanminus.
+#
+# Parameters:
+#
+# Actions:
+#
+# Requires:
+#
+# Sample Usage:
+#
 class perlbrew {
   include perlbrew::params
   include perlbrew::install
@@ -7,11 +20,11 @@ class perlbrew {
     exec {
       "perlbrew_build_${name}":
         command => "/bin/sh -c 'umask 022; /usr/bin/env PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install ${version} --as ${name} -Accflags=-fPIC -Dcccdlflags=-fPIC'",
-        user    => "perlbrew",
-        group   => "perlbrew",
+        user    => 'perlbrew',
+        group   => 'perlbrew',
         timeout => 3600,
         creates => "${perlbrew::params::perlbrew_root}/perls/${name}",
-        require => Class["perlbrew::environment"],
+        require => Class['perlbrew::environment'],
     }
   }
 
