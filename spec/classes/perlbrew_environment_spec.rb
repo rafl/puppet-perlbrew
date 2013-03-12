@@ -6,13 +6,15 @@ describe 'perlbrew::environment' do
 
   it { should contain_group('perlbrew').with(
       'ensure' => 'present',
-      'gid'    => '300'
+      'gid'    => nil,
+      'system' => true
   )}
 
   it { should contain_user('perlbrew').with(
       'ensure' => 'present',
-      'uid'    => '300',
-      'gid'    => 'perlbrew'
+      'uid'    => nil,
+      'gid'    => 'perlbrew',
+      'system' => true
   )}
 
 end
