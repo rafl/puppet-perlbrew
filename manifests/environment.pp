@@ -15,15 +15,17 @@ class perlbrew::environment {
   group {
     'perlbrew':
       ensure => present,
-      gid    => 300,
+      gid    => $perlbrew::params::perlbrew_gid,
+      system => true,
   }
 
   user {
     'perlbrew':
-      ensure   => present,
-      home     => $perlbrew::params::perlbrew_root,
-      uid      => 300,
-      gid      => 'perlbrew',
+      ensure => present,
+      home   => $perlbrew::params::perlbrew_root,
+      uid    => $perlbrew::params::perlbrew_uid,
+      gid    => 'perlbrew',
+      system => true,
   }
 
   file {
