@@ -15,14 +15,15 @@
 # Sample Usage:
 #
 class perlbrew::install {
-  package {
-    'build-essential':
-      ensure => present,
+
+  if !defined (Package['build-essential']) 
+  { package 
+    { 'build-essential':ensure => installed, }
   }
 
-  package {
-    'wget':
-      ensure => present,
+  if !defined (Package['wget']) 
+  { package 
+    { 'wget':ensure => installed, } 
   }
 
   file {
