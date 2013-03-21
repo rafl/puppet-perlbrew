@@ -16,14 +16,14 @@
 #
 class perlbrew::install {
 
-  if !defined (Package['build-essential']) 
-  { package 
-    { 'build-essential':ensure => installed, }
+  if !defined (Package['build-essential'])
+  { package
+    { 'build-essential':ensure => present, }
   }
 
-  if !defined (Package['wget']) 
-  { package 
-    { 'wget':ensure => installed, } 
+  if !defined (Package['wget'])
+  { package
+    { 'wget':ensure => present, }
   }
 
   file {
