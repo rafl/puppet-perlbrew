@@ -16,11 +16,8 @@
 #
 class perlbrew::install {
 
-  case $::osfamily {
-    debian         : { require perlbrew::dependencies::debian }
-    redhat, Linux  : { require perlbrew::dependencies::centos }
-    suse           : { require perlbrew::dependencies::suse   }
-    default        : { notice("Could not load dependencies for ${::osfamily}") }
+  if ! defined( Class['perlbrew::dependencies'] ) {
+    require perlbrew::dependencies
   }
 
   if !defined (Package['wget'])
@@ -34,6 +31,6 @@ class perlbrew::install {
       group   => root,
       mode    => '0755',
       source  => "puppet:///modules/${module_name}/perlbrew",
-      require => [ Package['build-essential'], Package['wget'] ],
+      require => [ Class['perlbrew::dependencies'], Package['wget'] ],
   }
 }
