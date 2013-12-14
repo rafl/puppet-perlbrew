@@ -23,8 +23,8 @@ class perlbrew {
         # temporary storage, which happens to not be writable for the perlbrew
         # user. Use /bin/su to work this around.
       "install_patchperl_${name}":
-        command => "/bin/su - -c 'umask 022; ${perlbrew::params::perlbrew_bin} install-patchperl'",
-        creates => "${perlbrew::params::perlbrew_root}/bin/patchperl",
+        command => "/bin/sh -c 'umask 022; /usr/bin/env PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install-patchperl'",
+        creates => "/usr/local/bin/patchperl",
         require => Class['perlbrew::environment'],
     }
   }
@@ -39,7 +39,7 @@ class perlbrew {
         creates => "${perlbrew::params::perlbrew_root}/perls/${name}",
         require => [
           Class['perlbrew::environment'],
-          Perlbrew::Install_patchperl,
+          Perlbrew::Install_patchperl[$perl],
         ],
     }
   }
@@ -63,7 +63,7 @@ class perlbrew {
         command => "/bin/su - -c 'umask 022; ${perlbrew::params::perlbrew_root}/perls/${perl}/bin/cpanm ${name}' perlbrew >> ${perlbrew::params::perlbrew_root}/cpanm-install.log 2>&1",
         timeout => 1800,
         unless  => "${perlbrew::params::perlbrew_root}/perls/${perl}/bin/perl -m${name} -e1",
-        require => Perlbrew::Install_cpanm[$perl],
+        require => Perlbrew::Install_patchperl[$name],
     }
   }
 }
