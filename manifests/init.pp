@@ -55,10 +55,15 @@ class perlbrew {
     }
   }
 
-  define install_module ($perl) {
+  define install_module ($perl, $force = 0) {
+    $flags = ""
+    if $force == 1 {
+      $flags = "-f"
+    }
+
     exec {
       "install_module_${perl}_${name}":
-        command => "/bin/su - -c 'umask 022; ${perlbrew::params::perlbrew_root}/perls/${perl}/bin/cpanm ${name}' perlbrew >> ${perlbrew::params::perlbrew_root}/cpanm-install.log 2>&1",
+        command => "/bin/su - -c 'umask 022; ${perlbrew::params::perlbrew_root}/perls/${perl}/bin/cpanm ${flags} ${name}' perlbrew >> ${perlbrew::params::perlbrew_root}/cpanm-install.log 2>&1",
         timeout => 1800,
         unless  => "${perlbrew::params::perlbrew_root}/perls/${perl}/bin/perl -m${name} -e1",
         require => Perlbrew::Install_cpanm[$perl],
