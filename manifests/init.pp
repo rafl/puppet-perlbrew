@@ -56,9 +56,11 @@ class perlbrew {
   }
 
   define install_module ($perl, $force = 0) {
-    $flags = ""
     if $force == 1 {
       $flags = "-f"
+    }
+    else {
+      $flags = ""
     }
 
     exec {
