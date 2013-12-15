@@ -18,13 +18,27 @@ class perlbrew {
 
   define build ($version) {
     exec {
+      # puppet seems to change the current user weirdly when using the
+      # user/group options. That causes cpanm to use /root/.cpanm for it's
+      # temporary storage, which happens to not be writable for the perlbrew
+      # user. Use /bin/su to work this around.
+      "install_patchperl_${name}":
+        command => "/bin/sh -c 'umask 022; /usr/bin/env PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install-patchperl'",
+        creates => "${perlbrew::params::perlbrew_root}/bin/patchperl",
+        require => Class['perlbrew::environment'],
+    }
+
+    exec {
       "perlbrew_build_${name}":
         command => "/bin/sh -c 'umask 022; /usr/bin/env PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install ${version} --as ${name} -Accflags=-fPIC -Dcccdlflags=-fPIC'",
         user    => 'perlbrew',
         group   => 'perlbrew',
         timeout => 3600,
         creates => "${perlbrew::params::perlbrew_root}/perls/${name}",
-        require => Class['perlbrew::environment'],
+        require => [
+          Class['perlbrew::environment'],
+          Exec["install_patchperl_${name}"],
+        ],
     }
   }
 
@@ -41,10 +55,17 @@ class perlbrew {
     }
   }
 
-  define install_module ($perl) {
+  define install_module ($perl, $force = 0) {
+    if $force == 1 {
+      $flags = "-f"
+    }
+    else {
+      $flags = ""
+    }
+
     exec {
       "install_module_${perl}_${name}":
-        command => "/bin/su - -c 'umask 022; ${perlbrew::params::perlbrew_root}/perls/${perl}/bin/cpanm ${name}' perlbrew >> ${perlbrew::params::perlbrew_root}/cpanm-install.log 2>&1",
+        command => "/bin/su - -c 'umask 022; ${perlbrew::params::perlbrew_root}/perls/${perl}/bin/cpanm ${flags} ${name}' perlbrew >> ${perlbrew::params::perlbrew_root}/cpanm-install.log 2>&1",
         timeout => 1800,
         unless  => "${perlbrew::params::perlbrew_root}/perls/${perl}/bin/perl -m${name} -e1",
         require => Perlbrew::Install_cpanm[$perl],
