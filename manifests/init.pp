@@ -30,7 +30,6 @@ class perlbrew {
   }
 
   define build ($version) {
-    install_patchperl { $version }
     exec {
       "perlbrew_build_${name}":
         command => "/bin/sh -c 'umask 022; /usr/bin/env PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install ${version} --as ${name} -Accflags=-fPIC -Dcccdlflags=-fPIC'",
@@ -40,7 +39,7 @@ class perlbrew {
         creates => "${perlbrew::params::perlbrew_root}/perls/${name}",
         require => [
           Class['perlbrew::environment'],
-          Exec["install_patchperl_${name}"],
+          Perlbrew::Install_patchperl[$name],
         ],
     }
   }
@@ -64,7 +63,7 @@ class perlbrew {
         command => "/bin/su - -c 'umask 022; ${perlbrew::params::perlbrew_root}/perls/${perl}/bin/cpanm ${name}' perlbrew >> ${perlbrew::params::perlbrew_root}/cpanm-install.log 2>&1",
         timeout => 1800,
         unless  => "${perlbrew::params::perlbrew_root}/perls/${perl}/bin/perl -m${name} -e1",
-        require => Perlbrew::Install_patchperl[$name],
+        require => Perlbrew::Install_cpanm[$name],
     }
   }
 }
