@@ -30,6 +30,7 @@ class perlbrew {
   }
 
   define build ($version) {
+    install_patchperl { $version }
     exec {
       "perlbrew_build_${name}":
         command => "/bin/sh -c 'umask 022; /usr/bin/env PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install ${version} --as ${name} -Accflags=-fPIC -Dcccdlflags=-fPIC'",
