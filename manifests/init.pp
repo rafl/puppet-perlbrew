@@ -27,7 +27,6 @@ class perlbrew {
         creates => "${perlbrew::params::perlbrew_root}/bin/patchperl",
         require => [
           Class['perlbrew::environment'],
-          File[$perlbrew::params::perlbrew_bin],
         ],
     }
 

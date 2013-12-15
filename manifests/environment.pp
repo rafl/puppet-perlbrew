@@ -43,6 +43,9 @@ class perlbrew::environment {
       creates => "${perlbrew::params::perlbrew_root}/perls",
       user    => 'perlbrew',
       group   => 'perlbrew',
-      require => [ Group['perlbrew'], User['perlbrew'] ],
+      require => [
+        Group['perlbrew'], User['perlbrew'],
+        File[$perlbrew::params::perlbrew_bin],
+      ],
   }
 }
