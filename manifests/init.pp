@@ -56,7 +56,7 @@ class perlbrew {
   }
 
   define install_module ($perl, $force = 0, $sudo = 0) {
-    if $force == 1 and $sudo = 1 {
+    if $force == 1 and $sudo == 1 {
       $flags = "-fS"
     }
     elsif $force == 1 {
