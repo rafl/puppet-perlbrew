@@ -23,17 +23,14 @@ class perlbrew {
       # temporary storage, which happens to not be writable for the perlbrew
       # user. Use /bin/su to work this around.
       "install_patchperl_${name}":
-        command => "/bin/sh -c 'umask 022; /usr/bin/env PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install-patchperl'",
+        command => "/bin/sh -c 'umask 022; PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install-patchperl'",
         creates => "${perlbrew::params::perlbrew_root}/bin/patchperl",
-        require => [
-          Class['perlbrew::environment'],
-          File[$perlbrew::params::perlbrew_bin],
-        ],
+        require => Class['perlbrew::environment'],
     }
 
     exec {
       "perlbrew_build_${name}":
-        command => "/bin/sh -c 'umask 022; /usr/bin/env PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install ${version} --as ${name} -Accflags=-fPIC -Dcccdlflags=-fPIC'",
+        command => "/bin/sh -c 'umask 022; PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install ${version} --as ${name} -Accflags=-fPIC -Dcccdlflags=-fPIC'",
         user    => 'perlbrew',
         group   => 'perlbrew',
         timeout => 3600,
