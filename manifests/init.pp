@@ -61,7 +61,7 @@ class perlbrew {
         command => "/bin/su - -c 'umask 022; ${perlbrew::params::perlbrew_root}/perls/${perl}/bin/cpanm ${name}' perlbrew >> ${perlbrew::params::perlbrew_root}/cpanm-install.log 2>&1",
         timeout => 1800,
         unless  => "${perlbrew::params::perlbrew_root}/perls/${perl}/bin/perl -m${name} -e1",
-        require => Perlbrew::Install_cpanm[$name],
+        require => Perlbrew::Install_cpanm[$perl],
     }
   }
 }
