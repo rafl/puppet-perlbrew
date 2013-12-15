@@ -39,7 +39,7 @@ class perlbrew {
         creates => "${perlbrew::params::perlbrew_root}/perls/${name}",
         require => [
           Class['perlbrew::environment'],
-          Perlbrew::Install_patchperl[$perl],
+          Exec["install_patchperl_${name}"],
         ],
     }
   }
