@@ -25,7 +25,10 @@ class perlbrew {
       "install_patchperl_${name}":
         command => "/bin/sh -c 'umask 022; /usr/bin/env PERLBREW_ROOT=${perlbrew::params::perlbrew_root} ${perlbrew::params::perlbrew_bin} install-patchperl'",
         creates => "${perlbrew::params::perlbrew_root}/bin/patchperl",
-        require => Class['perlbrew::environment'],
+        require => [
+          Class['perlbrew::environment'],
+          File[$perlbrew::params::perlbrew_bin],
+        ],
     }
 
     exec {
